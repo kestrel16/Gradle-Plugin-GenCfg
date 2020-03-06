@@ -23,6 +23,14 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.Input;
 
+/**
+ * Class that implements the configuration file generation. This Task class that is also
+ * referenced by the plugin class, as well as the class that will be used when registering 
+ * tasks, i.e., it can be reused for defining similar tasks.
+ * 
+ * @author andyabrams
+ *
+ */
 public class GenCfgTask extends DefaultTask {
 	private String templatePath;
 	private String targetPath;
@@ -153,11 +161,12 @@ public class GenCfgTask extends DefaultTask {
     }
     
     /**
-     * 
-     * @param line
-     * @param tokenValueMap
-     * @return
-     * @throws Exception
+     * Creates a new string with tokens replaced by values.
+     * @param line String containing tokens that will be replaced
+     * @param tokenValueMap Map of tokens to values.
+     * @return String where tokens have been replaced.
+     * @throws NoSuchFieldExceptionon Exception will be generated if a token is identified 
+     * and there is no corresponding value in the map
      */
     private String genTargetFileLine(String line, HashMap<String,String> tokenValueMap) throws NoSuchFieldException {
         
