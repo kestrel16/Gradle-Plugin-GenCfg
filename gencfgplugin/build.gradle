@@ -1,0 +1,24 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+dependencies {
+    compile gradleApi()
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.8'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.0'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
+}
+
+repositories {
+    jcenter()
+}
+
+group = 'com.vtxii.gradle.plugin'
+version = '1.0'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+        repository(url: mavenLocal().url)
+        }
+    }
+} 
