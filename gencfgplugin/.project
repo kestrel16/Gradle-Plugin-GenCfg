@@ -20,4 +20,11 @@
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>README.md</name>
+			<type>1</type>
+			<location>/Users/andyabrams/git/Gradle-Plugin-GenCfg/README.md</location>
+		</link>
+	</linkedResources>
 </projectDescription>
