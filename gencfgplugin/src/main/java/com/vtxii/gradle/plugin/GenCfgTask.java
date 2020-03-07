@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.InvalidUserDataException;
 import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.Input;
 
@@ -67,10 +68,7 @@ public class GenCfgTask extends DefaultTask {
 
     @TaskAction
     public void myTask() {
-        System.out.println("Template Path:  " + this.templatePath);
-        System.out.println("Target Path:  " + this.targetPath);
-        System.out.println("Properties Path:  " + this.propertiesPath);
-        
+    	
         // Convert string path to Path objects
         Path templatePath = Paths.get(this.templatePath);
         Path targetPath = Paths.get(this.targetPath);
@@ -96,17 +94,17 @@ public class GenCfgTask extends DefaultTask {
 			}
 			
 		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new InvalidUserDataException(e.getMessage());
 		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new InvalidUserDataException(e.getMessage());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new InvalidUserDataException(e.getMessage());
 		} catch (NoSuchFieldException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
+			throw new InvalidUserDataException(e.getMessage());
 		}
     }
 
