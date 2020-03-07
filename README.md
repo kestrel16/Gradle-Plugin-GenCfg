@@ -24,14 +24,49 @@ This project addresses the need to manage configuration files (.yaml, .json, .pr
 	}
 	
 Assumes plugin is in a Maven repo.
-
+#### Sample Template File (.yaml):
+	apiVersion: apps/v1
+	kind: Deployment
+	metadata:
+	  name: [name]-deployment
+	  labels:
+	    app: [name]
+	spec:
+	  selector:
+	    matchLabels:
+	      app: [name]
+	  template:
+	    metadata:
+	      labels:
+	        app: [name]
+	    spec:
+	      containers:
+	      - name: [name]-container
+	        image: [name]:[version]
+	        ports:
+	        - containerPort: [port]
+	---
+	apiVersion: v1
+	kind: Service
+	metadata:
+	  name: [name]-service
+	spec:
+	  type: NodePort
+	  selector:
+	    app: [name]
+	  ports:
+	  - protocol: TCP
+	    port: [port]
+	    targetPort: [port]
+	    nodePort: [node-port]
 #### Sample Properties File (.json):
-
 	{
 		"environments": ["dev", "sit", ""],
 		"tokenValueMap" : {
-			"podName": "dapod"
+			"name": "system",
+			"version": "1.0-SNAPSHOT",
+			"port": "9080",
+			"node-port": "3100"
 		}
 	}
-	
 Environment value of "" is used for production.
