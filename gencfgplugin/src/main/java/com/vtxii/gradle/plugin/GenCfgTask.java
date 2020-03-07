@@ -24,9 +24,11 @@ import org.gradle.api.tasks.TaskAction;
 import org.gradle.api.tasks.Input;
 
 /**
- * Class that implements the configuration file generation. This Task class that is also
- * referenced by the plugin class, as well as the class that will be used when registering 
- * tasks, i.e., it can be reused for defining similar tasks.
+ * Implements the configuration file generation - creating environment specific file
+ * by reading a template file, replacing tokens with desired values, writing the results
+ * to a file with the name extended to indicate the environment associated with the file.
+ * This Task class is also referenced by the plugin class, as well as the class that will be 
+ * used when registering tasks, i.e., it can be reused for defining similar tasks.
  * 
  * @author andyabrams
  *
@@ -85,7 +87,10 @@ public class GenCfgTask extends DefaultTask {
 			// Loop over environments creating environment target files
 			for(String environment : environments)
 			{
+				// Add the environment to the map 
 				tokenValueMap.put("env", environment);
+				
+				// Do the work
 				Path environmentTargetPath = genEnvironmentTargetFilePath(environment, targetPath);
 				genTargetFile(templatePath, environmentTargetPath, tokenValueMap);
 			}
@@ -108,24 +113,32 @@ public class GenCfgTask extends DefaultTask {
     /**
      * Decompose the target file path and put it back together with _environment added
      * @param environment String containing the name of the environment.
-     * @param targetPath Path of the target file as originally specified. 
+     * @param targetPath Absolute path of the target file as originally specified. 
      * @return An environment specific target file path.
      */
     private Path genEnvironmentTargetFilePath(String environment, Path targetPath) {
+    	
+    	// Take into account that the environment can be empty, which is equivalent to prod
+    	if (environment.equals(""))
+    		return targetPath;
+    	
+    	// Break the path into component parts
     	Path filename = targetPath.getFileName();
     	String[] split = filename.toString().split("\\.");
     	String name = split[0];
     	String extension = split[1];
     	Path parent = targetPath.getParent();
     	Path root = targetPath.getRoot();
+    	
+    	// Put the path back together, adding _ and environment
     	Path environmentTargetPath = root.resolve(parent).resolve(name + "_" + environment + "." + extension);
 		return environmentTargetPath;
     }
     
     /**
      * Reads properties per JSON format and puts the results into a map.
-     * @param propertiesPath Path to the .json file.
-     * @return Resulting JSON in a map.
+     * @param propertiesPath  Absolute path to the .json file.
+     * @return Resulting JSON as a map.
      * @throws JsonParseException
      * @throws JsonMappingException
      * @throws IOException
@@ -140,8 +153,8 @@ public class GenCfgTask extends DefaultTask {
     
     /**
      * Takes a template file and token/value pairs and generates a target file with tokens replaced with values.
-     * @param templatePath  Path to the template file that has tokens needing to be replaced by values.
-     * @param targetPath Path to the file that has tokens replaced with values.
+     * @param templatePath  Absolute path to the template file that has tokens needing to be replaced by values.
+     * @param targetPath Absolute path to the file that has tokens replaced with values.
      * @param tokenValueMap Map of tokens with corresponding values.
      * @throws IOException
      * @throws NoSuchFieldException
