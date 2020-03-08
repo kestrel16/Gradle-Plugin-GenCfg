@@ -69,7 +69,8 @@ public class GenCfgTask extends DefaultTask {
     @TaskAction
     public void myTask() {
     	
-        // Convert string path to Path objects
+    	// Validate parameters Convert string path to Path objects
+    	validateParameters(this.templatePath, this.targetPath, this.propertiesPath);
         Path templatePath = Paths.get(this.templatePath);
         Path targetPath = Paths.get(this.targetPath);
         Path propertiesPath = Paths.get(this.propertiesPath);
@@ -108,6 +109,27 @@ public class GenCfgTask extends DefaultTask {
 		}
     }
 
+    /**
+     * Make sure we have all of the parameters, that they are not null, 0 length,
+     * or are not absolute paths
+     * @param templatePath Absolute path to the template file that has tokens needing to be replaced by values.
+     * @param targetPath Absolute path to the file that has tokens replaced with values.
+     * @param propertiesPath Absolute path to the .json file.
+     * @throws InvalidUserDataException Exception if any of the values is invalid.
+     */
+    private void validateParameters(String templatePath, String targetPath, 
+    		String propertiesPath) throws InvalidUserDataException {
+    	if (templatePath == null || templatePath.length() == 0 || !Paths.get(templatePath).isAbsolute()) {
+    		throw new InvalidUserDataException("invalid template path");
+    	}
+        if (targetPath == null || targetPath.length() == 0 || !Paths.get(targetPath).isAbsolute()) {
+        		throw new InvalidUserDataException("invalid target path");
+    	}
+        if (propertiesPath == null || propertiesPath.length() == 0 || !Paths.get(propertiesPath).isAbsolute()) {
+    		throw new InvalidUserDataException("invalid properties path");
+        }
+	}
+    
     /**
      * Decompose the target file path and put it back together with _environment added
      * @param environment String containing the name of the environment.
